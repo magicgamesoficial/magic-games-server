@@ -30,6 +30,15 @@ const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 const environment = new paypal.core.LiveEnvironment(clientId, clientSecret);
 const client = new paypal.core.PayPalHttpClient(environment);
 
+
+// ------------------------------
+// RUTA GET /
+// ------------------------------
+// Solo para probar que el backend funciona
+app.get("/", (req, res) => {
+  res.send("✅ Backend de Magic Games activo!");
+});
+
 // ------------------------------
 // RUTA 1: Crear una orden en PayPal
 // ------------------------------
@@ -101,3 +110,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Servidor en PRODUCCIÓN escuchando en http://localhost:${PORT}`);
 });
+
