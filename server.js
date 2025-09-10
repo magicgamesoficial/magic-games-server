@@ -65,8 +65,8 @@ app.post("/capture-order", async (req, res) => {
     if (capture.result.status === "COMPLETED") {
       // ✅ Pago exitoso → enviamos los enlaces de descarga
       const downloadLinks = {
-        pc: "https://TU_DOMINIO.com/descargas/FRUTO_PROHIBIDO.exe",    
-        android: "https://TU_DOMINIO.com/descargas/FRUTO_PROHIBIDO.apk" 
+        pc: "https://magicsgames.netlify.app/html/inicio/descargas/FRUTO_PROHIBIDO.exe",    
+        android: "https://magicsgames.netlify.app/html/inicio/descargas/FRUTO_PROHIBIDO.apk" 
       };
 
       res.json({
