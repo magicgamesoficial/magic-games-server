@@ -15,7 +15,7 @@ app.use(express.json()); // Para parsear JSON
 // ------------------------------
 // Configuración de CORS
 // ------------------------------
-const allowedOrigins = ["https://magicsgames.netlify.app/"];
+const allowedOrigins = ["https://magicsgames.netlify.app"];
 app.use(cors({
   origin: allowedOrigins
 }));
@@ -110,4 +110,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`✅ Servidor en PRODUCCIÓN escuchando en http://localhost:${PORT}`);
 });
+
 
