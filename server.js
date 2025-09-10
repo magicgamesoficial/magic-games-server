@@ -10,8 +10,15 @@ require("dotenv").config();
 // Inicializamos la app
 // ------------------------------
 const app = express();
-app.use(cors());
-app.use(express.json()); 
+app.use(express.json()); // Para parsear JSON
+
+// ------------------------------
+// Configuración de CORS
+// ------------------------------
+const allowedOrigins = ["https://magicsgames.netlify.app/"];
+app.use(cors({
+  origin: allowedOrigins
+}));
 
 // ------------------------------
 // Configuración de PayPal (PRODUCCIÓN)
@@ -19,7 +26,7 @@ app.use(express.json());
 const clientId = process.env.PAYPAL_CLIENT_ID;
 const clientSecret = process.env.PAYPAL_CLIENT_SECRET;
 
-// ⚠️ Ahora usamos LiveEnvironment en vez de Sandbox
+// LiveEnvironment para producción
 const environment = new paypal.core.LiveEnvironment(clientId, clientSecret);
 const client = new paypal.core.PayPalHttpClient(environment);
 
@@ -54,7 +61,7 @@ app.post("/create-order", async (req, res) => {
 // RUTA 2: Capturar la orden
 // ------------------------------
 app.post("/capture-order", async (req, res) => {
-  const { orderID, title } = req.body;
+  const { orderID, title, version } = req.body;
 
   const request = new paypal.orders.OrdersCaptureRequest(orderID);
   request.requestBody({});
@@ -63,17 +70,20 @@ app.post("/capture-order", async (req, res) => {
     const capture = await client.execute(request);
 
     if (capture.result.status === "COMPLETED") {
-      // ✅ Pago exitoso → enviamos los enlaces de descarga
+      // ✅ Pago exitoso → enviamos los enlaces de descarga según versión
       const downloadLinks = {
         pc: "https://drive.google.com/file/d/1zBtUFyjblHuJKYkI__Yqwr3XeKufqCcr/view?usp=sharing",    
         android: "https://drive.google.com/file/d/1-nwAE7bRaD3BPUWuG2WOvPdJT0UcLQsO/view?usp=sharing" 
       };
 
+      // Elegir la versión correspondiente
+      const downloadUrl = version === "android" ? downloadLinks.android : downloadLinks.pc;
+
       res.json({
         success: true,
         title,
         transactionId: capture.result.id,
-        downloadLinks,
+        downloadUrl,
       });
     } else {
       res.json({ success: false });
